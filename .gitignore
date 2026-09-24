@@ -1,0 +1,24 @@
+# Virtual environment
+.venv/
+
+# Python cache (compiled files)
+__pycache__/
+*.pyc
+
+# Created by pip install -e
+*.egg-info/
+build/
+dist/
+
+# Test tool and linter caches
+.pytest_cache/
+.ruff_cache/
+
+# Local databases created when the program runs
+*.db
+
+# Editor settings
+.vscode/
+
+# macOS
+.DS_Store
