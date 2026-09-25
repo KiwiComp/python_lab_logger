@@ -1,6 +1,12 @@
+# LabLogger
 
+A measurement and control system in Python. A Raspberry Pi acts as an instrument
+that reports its CPU temperature and drives an alarm LED over a simple TCP protocol,
+while LabLogger reads, stores and displays the measurements.
 
-## Architecture Tree
+## Project Structure
+
+```
 python_lab_logger/
 ├── .gitignore
 ├── .github/
@@ -37,3 +43,18 @@ python_lab_logger/
     ├── test_protocol.py
     ├── test_storage.py
     └── test_service.py
+```
+
+
+## Design decisions
+
+### Reproducible simulation
+`SimulatedDevice` produces a temperature that follows a slow sine wave with
+Gaussian noise, so the whole system can be developed and tested without hardware.
+The noise comes from a random number generator that accepts an optional seed:
+
+    device = SimulatedDevice(seed=42)
+
+Two devices created with the same seed produce the same noise sequence.
+This makes test runs and debugging sessions reproducible, which is essential
+when results need to be verified and compared over time.
