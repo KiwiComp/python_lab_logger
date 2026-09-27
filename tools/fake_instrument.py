@@ -32,3 +32,5 @@ if __name__ == "__main__":
     with socketserver.TCPServer(("127.0.0.1", PORT), Handler) as server:
         print(f"Fake instrument listening on port {PORT}")
         server.serve_forever()
+
+# Run --> python tools/fake_instrument.py
