@@ -22,3 +22,6 @@ dist/
 
 # macOS
 .DS_Store
+
+# ESP32 Wi-Fi credentials
+firmware/esp32/wifi_config.py
