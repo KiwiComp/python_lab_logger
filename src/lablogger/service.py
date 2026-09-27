@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from lablogger.devices.base import Device
 from lablogger.models import Measurement
@@ -17,7 +17,7 @@ class MeasurementService:
         # Callback, dart --> DateTime Function().
         # A function that takes no arguments and returns the current time.
         # Injected so that tests can control time.
-        clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
+        clock: Callable[[], datetime] = lambda: datetime.now(UTC),
     ):
         # Dependencies and configuration
         self._device = device

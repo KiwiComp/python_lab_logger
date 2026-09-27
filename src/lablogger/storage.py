@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from lablogger.models import Measurement
@@ -43,7 +43,7 @@ class MeasurementRepository:
         with self._conn:
             self._conn.execute(
                 "INSERT INTO events (timestamp, kind, message) VALUES (?, ?, ?)",
-                (datetime.now(timezone.utc).isoformat(), kind, message),
+                (datetime.now(UTC).isoformat(), kind, message),
             )
 
     def latest(self, limit: int = 100) -> list[Measurement]:
