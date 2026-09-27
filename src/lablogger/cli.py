@@ -2,9 +2,7 @@ import argparse
 import time
 
 from lablogger.devices.simulated import SimulatedDevice
-
-# TODO(phase 8): Uncomment import when TcpDevice exists in phase 8.
-# from lablogger.devices.tcp_device import TcpDevice
+from lablogger.devices.tcp_device import TcpDevice
 from lablogger.service import MeasurementService
 from lablogger.storage import MeasurementRepository
 
@@ -24,10 +22,7 @@ def main() -> None:
     parser.add_argument("--unit", default="°C")
     args = parser.parse_args()
 
-    # TODO(phase 8): --host is parsed but ignored until TcpDevice is enabled.
-    # For now, the device is always simulated.
-    # device = TcpDevice(args.host, args.port) if args.host else SimulatedDevice()
-    device = SimulatedDevice()
+    device = TcpDevice(args.host, args.port) if args.host else SimulatedDevice()
     repo = MeasurementRepository(args.db)
     try:
         with device:
