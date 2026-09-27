@@ -20,6 +20,8 @@ def main() -> None:
     parser.add_argument("--interval", type=float, default=1.0)
     parser.add_argument("--count", type=int, default=10)
     parser.add_argument("--threshold", type=float, default=60.0)
+    parser.add_argument("--channel", default="cpu_temp")
+    parser.add_argument("--unit", default="°C")
     args = parser.parse_args()
 
     # TODO(phase 8): --host is parsed but ignored until TcpDevice is enabled.
@@ -29,7 +31,13 @@ def main() -> None:
     repo = MeasurementRepository(args.db)
     try:
         with device:
-            service = MeasurementService(device, repo, alarm_threshold=args.threshold)
+            service = MeasurementService(
+                device,
+                repo,
+                channel=args.channel,
+                unit=args.unit,
+                alarm_threshold=args.threshold,
+            )
             for _ in range(args.count):
                 m = service.sample()
                 flag = "  ALARM" if service.alarm_active else ""

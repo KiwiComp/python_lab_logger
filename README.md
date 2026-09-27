@@ -21,8 +21,12 @@ python_lab_logger/
 │   ├── protocol.md
 │   └── manual-tests.md
 ├── firmware/
-│   ├── pi_instrument.py
-│   └── lablogger-instrument.service
+│   ├── pi/
+│   │   ├── instrument.py
+│   │   └── lablogger-instrument.service
+│   └── esp32/
+│       ├── main.py
+│       └── wifi_config_example.py
 ├── src/lablogger/
 │   ├── __init__.py
 │   ├── errors.py
