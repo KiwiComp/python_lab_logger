@@ -99,6 +99,7 @@ python_lab_logger/
 │   ├── __init__.py
 │   ├── errors.py
 │   ├── models.py
+│   ├── options.py
 │   ├── protocol.py
 │   ├── storage.py
 │   ├── service.py
@@ -113,6 +114,7 @@ python_lab_logger/
 │       ├── main_window.py
 │       └── app.py
 ├── tests/
+│   ├── test_options.py
 │   ├── test_protocol.py
 │   ├── test_storage.py
 │   └── test_service.py
