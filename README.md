@@ -84,6 +84,58 @@ fake devices used in the tests. The reasoning behind these and other choices is 
 in [docs/design.md](docs/design.md).
 
 
+## Project structure
+
+```text
+python_lab_logger/
+├── pyproject.toml                  # Package metadata, dependencies and commands
+├── README.md
+├── LICENSE
+├── docs/
+│   ├── usage.md                    # Running LabLogger, options and stored data
+│   ├── esp32-setup.md              # Wiring and installing the ESP32 instrument
+│   ├── protocol.md                 # The TCP protocol to the instrument
+│   ├── design.md                   # Design decisions
+│   ├── requirements.md             # Requirements and the tests that verify them
+│   ├── manual-tests.md             # Manual tests and test log
+│   ├── troubleshooting.md          # Common problems and solutions
+│   └── images/
+│       └── gui.png                 # GUI screenshot used in this README
+├── firmware/
+│   ├── pi/                         # Raspberry Pi instrument (not implemented yet)
+│   │   ├── instrument.py
+│   │   └── lablogger-instrument.service
+│   └── esp32/                      # ESP32 instrument (MicroPython)
+│       ├── main.py                 # Firmware: Wi-Fi, TCP server, ADC and LED
+│       └── wifi_config_example.py  # Template for wifi_config.py
+├── src/lablogger/
+│   ├── __init__.py
+│   ├── errors.py                   # LabLoggerError, ProtocolError and DeviceError
+│   ├── models.py                   # The Measurement data class
+│   ├── options.py                  # Options shared by the CLI and the GUI
+│   ├── protocol.py                 # Parsing of instrument responses
+│   ├── storage.py                  # SQLite storage of measurements and events
+│   ├── service.py                  # Measures, stores and handles the alarm
+│   ├── cli.py                      # The lablogger command
+│   ├── devices/
+│   │   ├── __init__.py
+│   │   ├── base.py                 # Device: abstract base class for devices
+│   │   ├── simulated.py            # SimulatedDevice, no hardware needed
+│   │   └── tcp_device.py           # TcpDevice, talks to an instrument over TCP
+│   └── gui/
+│       ├── __init__.py
+│       ├── main_window.py          # The main window
+│       └── app.py                  # The lablogger-gui command
+├── tests/                          # Automated tests (pytest)
+│   ├── test_options.py
+│   ├── test_protocol.py
+│   ├── test_storage.py
+│   └── test_service.py
+└── tools/
+    └── fake_instrument.py          # Local stand-in for the instrument
+```
+
+
 ## Development
 
 ```bash
