@@ -14,8 +14,6 @@ class MeasurementService:
         channel: str = "cpu_temp",
         unit: str = "°C",
         alarm_threshold: float = 60.0,
-        # Callback, dart --> DateTime Function().
-        # A function that takes no arguments and returns the current time.
         # Injected so that tests can control time.
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
     ):
@@ -30,7 +28,6 @@ class MeasurementService:
         # Internal state
         self._alarm_active = False
 
-    # Dart: bool get alarmActive => _alarmActive;
     @property
     def alarm_active(self) -> bool:
         """Whether the alarm is currently active (read-only)."""
