@@ -5,7 +5,8 @@ from PySide6.QtWidgets import QApplication
 
 from lablogger.gui.main_window import MainWindow
 from lablogger.options import add_common_arguments, create_device
-from lablogger.service import MeasurementRepository, MeasurementService
+from lablogger.service import MeasurementService
+from lablogger.storage import MeasurementRepository
 
 
 def main() -> None:

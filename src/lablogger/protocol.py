@@ -5,10 +5,10 @@ def parse_response(line: str) -> str:
     """Parse a response line and return the payload after 'OK '."""
     line = line.strip()
     if line.startswith("OK "):
-        return line[3:] # 3: --> Slicing, remove 3 first characters
+        return line[3:]
     if line.startswith("ERR "):
         raise DeviceError(line[4:])
-    raise ProtocolError(f"Unexpected response: {line!r}") # !r --> Make hidden characters visible (e.g. line break, '')
+    raise ProtocolError(f"Unexpected response: {line!r}")
 
 
 def parse_value(payload: str) -> float:
