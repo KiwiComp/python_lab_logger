@@ -185,6 +185,106 @@ Expected:
   and the LED turns off.
 
 
+## MT-09: Command line with the Raspberry Pi instrument
+
+Verifies: REQ-001, REQ-003, REQ-004, REQ-007
+
+Requires a Raspberry Pi set up as in [pi-setup.md](pi-setup.md), with the instrument
+running and `stress-ng` installed (`sudo apt install -y stress-ng`).
+
+1. Run the command below and note the highest temperature. Call it *T* and add 5:
+
+  ```bash
+  lablogger --host lablogger-pi.local --count 5 --db test.db
+  ```
+
+2. Run, with *T* + 5 as the threshold:
+
+  ```bash
+  lablogger --host lablogger-pi.local --threshold <T + 5> --count 240 --db test.db
+  ```
+
+3. About ten seconds into the run, load the Pi's CPU from an SSH session:
+
+  ```bash
+  stress-ng --cpu 4 --timeout 30s
+  ```
+
+Expected:
+
+- Step 1 prints five temperatures in °C.
+- In step 2, when the temperature goes above the threshold, the line is marked `ALARM`
+  and the LED lights up.
+- After the load ends and the temperature falls back to the threshold or below, the LED
+  turns off.
+
+
+## MT-10: GUI with the Raspberry Pi instrument
+
+Verifies: REQ-003, REQ-004, REQ-007, REQ-008
+
+Requires a Raspberry Pi set up as in MT-09.
+
+1. Measure the idle temperature as in step 1 of MT-09, and call the highest value *T*.
+2. Run, with *T* + 5 as the threshold:
+
+  ```bash
+  lablogger-gui --host lablogger-pi.local --threshold <T + 5> --db test.db
+  ```
+
+3. Press **Start**. About ten seconds later, load the Pi's CPU for 30 seconds from an SSH
+   session:
+
+  ```bash
+   stress-ng --cpu 4 --timeout 30s
+  ```
+
+4. Keep measuring until the temperature has fallen back to the threshold or below, then
+   press **Stop** and close the window.
+
+Expected:
+
+- The value and the table show the temperature in °C, about once per second.
+- When the temperature goes above the threshold, the status turns red and the LED lights
+  up.
+- When it falls back to the threshold or below, the status returns to
+  `Measuring - normal` and the LED turns off.
+
+
+## MT-11: The Raspberry Pi instrument starts automatically
+
+Verifies: REQ-009
+
+Requires a Raspberry Pi set up as in [pi-setup.md](pi-setup.md), with the systemd service
+installed and enabled.
+
+1. Restart the Pi from an SSH session with `sudo reboot`.
+2. Wait about a minute. Without logging in to the Pi, run on your computer:
+
+  ```bash
+   lablogger --host lablogger-pi.local --count 5 --db test.db
+  ```
+
+3. Log in over SSH and run `systemctl status lablogger-instrument`. Note the number after
+   `Main PID`.
+4. Simulate a crash by killing that process:
+
+  ```bash
+   sudo kill -9 <Main PID>
+  ```
+
+5. Wait a few seconds and run `systemctl status lablogger-instrument` again.
+6. Run the command from step 2 again on your computer.
+
+Expected:
+
+- Step 2 prints five temperatures, without anyone having started the instrument by hand.
+- In step 3, the service is `enabled` and `active (running)`.
+- In step 5, the service is `active (running)` again, with a new `Main PID`, a start time
+  a few seconds ago and `Scheduled restart job` in the log lines.
+- Step 6 prints five temperatures.
+
+
 ## Test log
 
 | Date | Test | Setup | Result | Notes |
@@ -197,3 +297,7 @@ Expected:
 | 2026-09-28 | MT-06 | Fake instrument | Pass | Dialog: Connection closed by device |
 | 2026-09-28 | MT-07 | ESP32, MicroPython | Pass | |
 | 2026-09-28 | MT-08 | ESP32, MicroPython | Pass | |
+| 2026-09-29 | MT-09 | Raspberry Pi | Fail | Threshold 47, count 90 and stress timeout 40s. Alarm turned on, but the temperature did not fall below the threshold before the run ended. Test procedure too short; updated. |
+| 2026-09-29 | MT-09 | Raspberry Pi | Pass | Threshold 49, count 240 and stress timeout 30s. |
+| 2026-09-29 | MT-10 | Raspberry Pi | Pass | Threshold 51 |
+| 2026-09-29 | MT-11 | Raspberry Pi, systemd | Pass | |
