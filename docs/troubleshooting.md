@@ -76,3 +76,26 @@ after changing it.
 **`nc` or LabLogger cannot reach the board.** Check that the computer and the board are on
 the same network, and that the network does not isolate its devices from each other,
 which guest networks often do.
+
+
+## Raspberry Pi
+
+**`Could not resolve hostname lablogger-pi.local`.** The Pi has not finished starting, or
+it is not on the network. Wait a minute and try again. If it still fails, find the Pi's IP
+address in your router's list of connected devices and use it instead.
+
+**A warning about an invalid locale.** When you log in over SSH from macOS, the Pi may
+print `setlocale: LC_CTYPE: cannot change locale (UTF-8)`. macOS sends its language
+setting over SSH, and Linux does not recognise the value `UTF-8`. The warning is harmless,
+and all commands work as usual.
+
+**`git clone` asks for a username.** The repository is private, or the address is wrong.
+GitHub does not accept account passwords for Git; make the repository public, or give the
+Pi read access with a deploy key.
+
+**`Address already in use` when starting the instrument.** Another copy of
+`instrument.py` is already running on the Pi. Stop it with Ctrl+C in its terminal, or
+find it with `pgrep -af instrument.py`.
+
+**The LED does not light up.** Check that the LED's long leg points towards GPIO 17, and
+that the wires are on physical pins 11 and a GND pin. Run `pinout` to see the pin layout.
