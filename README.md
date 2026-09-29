@@ -91,6 +91,9 @@ python_lab_logger/
 ├── pyproject.toml                  # Package metadata, dependencies and commands
 ├── README.md
 ├── LICENSE
+├── .github
+│   └── workflows
+│       └── ci.yml                  # CI: ruff and the tests on every push and pull request
 ├── docs/
 │   ├── usage.md                    # Running LabLogger, options and stored data
 │   ├── esp32-setup.md              # Wiring and installing the ESP32 instrument
