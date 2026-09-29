@@ -1,5 +1,7 @@
 # LabLogger
 
+[![CI](https://github.com/KiwiComp/python_lab_logger/actions/workflows/ci.yml/badge.svg)](https://github.com/KiwiComp/python_lab_logger/actions/workflows/ci.yml)
+
 A measurement and control system in Python. An instrument reports measurements and drives
 an alarm LED over a simple [TCP protocol](docs/protocol.md), while LabLogger reads, stores
 and displays the measurements, in the terminal or in a desktop GUI.
@@ -11,14 +13,15 @@ and displays the measurements, in the terminal or in a desktop GUI.
 
 - **Two interfaces:** a command-line tool (`lablogger`) and a desktop GUI built with
   PySide6 (`lablogger-gui`).
-- **Real hardware:** an ESP32 running MicroPython reads a potentiometer and switches an
-  alarm LED over Wi-Fi.
+- **Two hardware instruments:** a Raspberry Pi that reports its CPU temperature, and an
+  ESP32 running MicroPython that reads a potentiometer. Both switch an alarm LED and are
+  reached over the network.
 - **No hardware needed to try it:** a simulated device, and a fake instrument that speaks
   the real protocol on your own computer.
 - **Alarm handling:** the LED is switched and an event is stored only when the alarm state
   changes.
 - **Storage:** every measurement and alarm event is stored in SQLite, with UTC timestamps.
-- **Tested:** automated tests with pytest, manual tests for the GUI and the hardware, and
+- **Tested:** automated tests and linting in CI, manual tests for the GUI and the hardware, and
   [requirements](docs/requirements.md) traced to the tests that verify them.
 
 
@@ -51,8 +54,14 @@ python tools/fake_instrument.py
 lablogger --host 127.0.0.1 --channel potentiometer --unit raw --threshold 3000 --count 20
 ```
 
-Run against an ESP32, once it is set up as described in
-[docs/esp32-setup.md](docs/esp32-setup.md):
+Run against a Raspberry Pi, set up as described in [docs/pi-setup.md](docs/pi-setup.md).
+The default options are meant for its CPU temperature:
+
+```bash
+lablogger --host lablogger-pi.local --count 60
+```
+
+Run against an ESP32, set up as described in [docs/esp32-setup.md](docs/esp32-setup.md):
 
 ```bash
 lablogger --host <ESP32 address> --channel potentiometer --unit raw --threshold 3000 --count 60
@@ -74,7 +83,7 @@ All ways to run LabLogger and all options are described in [docs/usage.md](docs/
                    Device
            ┌──────────┴──────────┐
            ▼                     ▼
-    SimulatedDevice          TcpDevice ──► instrument over TCP (ESP32 or fake)
+    SimulatedDevice          TcpDevice ──► instrument over TCP (Raspberry Pi, ESP32 or fake)
 ```
 
 Both programs create a device and a repository and hand them to a `MeasurementService`,
@@ -91,11 +100,12 @@ python_lab_logger/
 ├── pyproject.toml                  # Package metadata, dependencies and commands
 ├── README.md
 ├── LICENSE
-├── .github
+├── .github/
 │   └── workflows
 │       └── ci.yml                  # CI: ruff and the tests on every push and pull request
 ├── docs/
 │   ├── usage.md                    # Running LabLogger, options and stored data
+│   ├── pi-setup.md                 # Setting up the Raspberry Pi instrument
 │   ├── esp32-setup.md              # Wiring and installing the ESP32 instrument
 │   ├── protocol.md                 # The TCP protocol to the instrument
 │   ├── design.md                   # Design decisions
@@ -105,8 +115,8 @@ python_lab_logger/
 │   └── images/
 │       └── gui.png                 # GUI screenshot used in this README
 ├── firmware/
-│   ├── pi/                         # Raspberry Pi instrument (not implemented yet)
-│   │   ├── instrument.py
+│   ├── pi/                         # Raspberry Pi instrument
+│   │   ├── instrument.py           # TCP server, CPU temperature and LED
 │   │   └── lablogger-instrument.service
 │   └── esp32/                      # ESP32 instrument (MicroPython)
 │       ├── main.py                 # Firmware: Wi-Fi, TCP server, ADC and LED
@@ -147,8 +157,8 @@ ruff check .       # linting
 ruff format .      # formatting
 ```
 
-The GUI, the TCP communication and the hardware are verified with the
-[manual tests](docs/manual-tests.md).
+The same checks run in CI on every push and pull request. The GUI, the TCP communication
+and the hardware are verified with the [manual tests](docs/manual-tests.md).
 
 
 ## Documentation
@@ -156,6 +166,7 @@ The GUI, the TCP communication and the hardware are verified with the
 | Document | Content |
 |---|---|
 | [docs/usage.md](docs/usage.md) | Running LabLogger, all options and the stored data |
+| [docs/pi-setup.md](docs/pi-setup.md) | Setting up the Raspberry Pi instrument |
 | [docs/esp32-setup.md](docs/esp32-setup.md) | Wiring and installing the ESP32 instrument |
 | [docs/protocol.md](docs/protocol.md) | The TCP protocol between LabLogger and the instrument |
 | [docs/design.md](docs/design.md) | Design decisions |
@@ -166,8 +177,8 @@ The GUI, the TCP communication and the hardware are verified with the
 
 ## Known limitations
 
-- A Raspberry Pi instrument is planned but not implemented; `firmware/pi/` holds empty
-  placeholders.
+- The Raspberry Pi instrument is started by hand; it does not start automatically when
+  the Pi boots.
 - No schema migrations: after a schema change, an existing database file must be deleted.
 - No automatic reconnection if the connection to the instrument is lost.
 - The instruments serve one LabLogger connection at a time.
