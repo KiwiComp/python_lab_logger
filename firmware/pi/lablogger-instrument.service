@@ -1,0 +1,14 @@
+[Unit]
+Description=LabLogger instrument
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=kim
+WorkingDirectory=/home/kim/python_lab_logger
+ExecStart=/home/kim/python_lab_logger/.venv/bin/python firmware/pi/instrument.py
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

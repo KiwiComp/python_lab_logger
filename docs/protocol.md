@@ -31,7 +31,7 @@ the instrument:
 |---|---|---|
 | ESP32 (`firmware/esp32/main.py`) | Raw 12-bit ADC reading of GPIO 34: an integer from 0 (0 V) to 4095 (about 3.3 V) | `--channel potentiometer --unit raw --threshold 3000` |
 | Fake instrument (`tools/fake_instrument.py`) | A random integer from 0 to 4095, like the ESP32 | Same as for the ESP32 |
-| Raspberry Pi (planned, not implemented yet) | CPU temperature in °C, for example `48.3` | The defaults (`cpu_temp`, `°C`, threshold 60) |
+| Raspberry Pi (`firmware/pi/instrument.py`) | CPU temperature in °C, for example `48.3` | The defaults (`cpu_temp`, `°C`, threshold 60) |
 
 ## Response format
 

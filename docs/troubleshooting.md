@@ -29,7 +29,7 @@ error dialog instead.
 ## macOS: No route to host
 
 Recent versions of macOS require permission for apps that talk to other devices on the
-local network. Without it, connections to the ESP32 fail with `No route to host`, even
+local network. Without it, connections to the ESP32 or the Raspberry Pi fail with `No route to host`, even
 though the network works.
 
 Open System Settings → Privacy & Security → Local Network, turn on the app you run the
@@ -94,8 +94,9 @@ GitHub does not accept account passwords for Git; make the repository public, or
 Pi read access with a deploy key.
 
 **`Address already in use` when starting the instrument.** Another copy of
-`instrument.py` is already running on the Pi. Stop it with Ctrl+C in its terminal, or
-find it with `pgrep -af instrument.py`.
+`instrument.py` is already running on the Pi, usually the systemd service. Stop it with
+`sudo systemctl stop lablogger-instrument`, or find other copies with
+`pgrep -af instrument.py`.
 
 **The LED does not light up.** Check that the LED's long leg points towards GPIO 17, and
 that the wires are on physical pins 11 and a GND pin. Run `pinout` to see the pin layout.
