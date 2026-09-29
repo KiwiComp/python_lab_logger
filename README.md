@@ -101,7 +101,7 @@ python_lab_logger/
 ├── README.md
 ├── LICENSE
 ├── .github/
-│   └── workflows
+│   └── workflows/
 │       └── ci.yml                  # CI: ruff and the tests on every push and pull request
 ├── docs/
 │   ├── usage.md                    # Running LabLogger, options and stored data
@@ -117,7 +117,7 @@ python_lab_logger/
 ├── firmware/
 │   ├── pi/                         # Raspberry Pi instrument
 │   │   ├── instrument.py           # TCP server, CPU temperature and LED
-│   │   └── lablogger-instrument.service
+│   │   └── lablogger-instrument.service  # systemd unit: starts the instrument at boot
 │   └── esp32/                      # ESP32 instrument (MicroPython)
 │       ├── main.py                 # Firmware: Wi-Fi, TCP server, ADC and LED
 │       └── wifi_config_example.py  # Template for wifi_config.py
@@ -177,8 +177,6 @@ and the hardware are verified with the [manual tests](docs/manual-tests.md).
 
 ## Known limitations
 
-- The Raspberry Pi instrument is started by hand; it does not start automatically when
-  the Pi boots.
 - No schema migrations: after a schema change, an existing database file must be deleted.
 - No automatic reconnection if the connection to the instrument is lost.
 - The instruments serve one LabLogger connection at a time.

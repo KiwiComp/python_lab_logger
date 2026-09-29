@@ -106,6 +106,35 @@ temperature such as `OK VALUE=48.3`, `OK LED=1` and `OK LED=0`. Stop `nc` with C
 the instrument with Ctrl+C on the Pi.
 
 
+## Starting automatically with systemd
+
+[`firmware/pi/lablogger-instrument.service`](../firmware/pi/lablogger-instrument.service)
+runs the instrument as a systemd service, which starts it when the Pi boots and restarts
+it if it crashes. The file assumes the user `kim` and the project in
+`/home/kim/python_lab_logger`; change `User`, `WorkingDirectory` and `ExecStart` if your
+username is different.
+
+Install and start it:
+
+```bash
+sudo cp firmware/pi/lablogger-instrument.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now lablogger-instrument
+```
+
+Useful commands:
+
+| Command | Does |
+|---|---|
+| `systemctl status lablogger-instrument` | Shows whether the service runs (press q to leave) |
+| `journalctl -u lablogger-instrument -f` | Follows the service's log (Ctrl+C to leave) |
+| `sudo systemctl restart lablogger-instrument` | Restarts it, for example after `git pull` |
+| `sudo systemctl disable --now lablogger-instrument` | Stops it and no longer starts it at boot |
+
+Do not start `instrument.py` by hand while the service runs, since both would use port
+5000.
+
+
 ## Measuring
 
 The default options are meant for the CPU temperature:

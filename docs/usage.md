@@ -64,6 +64,16 @@ Stop it with Ctrl+C. Use `127.0.0.1` rather than `localhost`, see
 [Troubleshooting](troubleshooting.md).
 
 
+## Running against a Raspberry Pi
+
+Set up the Pi as described in [pi-setup.md](pi-setup.md). The default options are meant for
+its CPU temperature, so only the address is needed:
+
+```bash
+lablogger --host lablogger-pi.local --count 60 --db pi.db
+```
+
+
 ## Running against an ESP32
 
 Set up the ESP32 as described in [esp32-setup.md](esp32-setup.md), then run LabLogger with
